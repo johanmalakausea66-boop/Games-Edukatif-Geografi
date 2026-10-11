@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jelajah Atmosfer dan Kuliner Banda Naira Untuk Indonesia dan Dunia</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        banda: {
+                            ocean: '#0284c7',
+                            deep: '#0369a1',
+                            nutmeg: '#d97706',
+                            leaf: '#059669',
+                            sand: '#fef3c7',
+                            volcano: '#b91c1c'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: linear-gradient(rgba(15, 23, 42, 0.35), rgba(30, 41, 59, 0.5)), url('https://i.imgur.com/fe8qCly.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .glow-orange {
+            box-shadow: 0 0 20px rgba(217, 119, 6, 0.35);
+        }
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(2, 132, 199, 0.35);
+        }
+        canvas {
+            touch-action: none;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+        .animate-pulse-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="p-2 md:p-6 flex flex-col items-center justify-start min-h-screen">
+
+    <!-- Audio Background (Instrumen Maluku) -->
+    <audio id="bg-music" loop>
+        <source src="https://github.com/sman16sbb-creator/instrumen-lagu-lagu-maluku-ambon-timur/raw/refs/heads/main/WhatsApp%20Audio%202026-10-11%20at%2015.33.55%20(online-audio-converter.com).mp3" type="audio/mpeg">
+    </audio>
+
+    <header class="w-full max-w-5xl mb-6 glass-panel rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center justify-between shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-10 -left-10 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="flex items-center gap-4 z-10 mb-4 md:mb-0 text-center md:text-left">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-3xl shadow-lg border border-amber-300/30">
+                🌰
+            </div>
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+                    Geografi SMA Kelas 10 • Kurikulum Merdeka
+                </span>
+                <h1 class="text-xl md:text-2xl lg:text-3xl font-extrabold text-white mt-1 tracking-tight leading-tight">
+                    Jelajah Atmosfer dan Kuliner Banda Naira Untuk Indonesia dan Dunia
+                </h1>
+                <p class="text-xs md:text-sm text-slate-300 mt-1">
+                    Integrasi Iklim, Cuaca & Keajaiban Kuliner Pala Banda Neira
+                </p>
+                <!-- Informasi Penulis & Instansi -->
+                <div class="mt-3 text-xs md:text-sm text-amber-300 bg-slate-900/50 p-2.5 rounded-lg border border-amber-500/30 inline-block backdrop-blur-sm">
+                    <p class="font-bold"><i class="fas fa-user-edit mr-1"></i> Oleh : Freterait Malakausea, S.Pd</p>
+                    <p class="mt-0.5"><i class="fas fa-school mr-1"></i> Instansi : SMA Negeri 32 Seram Bagian Barat</p>
+                </div>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="flex items-center gap-3 z-10">
+            <div class="glass-panel px-4 py-2 rounded-xl text-center min-w-[90px] border border-amber-500/30">
+                <div class="text-xs text-amber-300 font-semibold uppercase">Skor Nutmeg</div>
+                <div id="player-score" class="text-xl font-black text-amber-400">0</div>
+            </div>
+            <div class="glass-panel px-4 py-2 rounded-xl text-center min-w-[90px] border border-sky-500/30">
+                <div class="text-xs text-sky-300 font-semibold uppercase">Lencana Pala</div>
+                <div id="player-badges" class="text-xl font-black text-sky-400">0 / 4</div>
+            </div>
+            <button id="sound-btn" onclick="toggleSound()" class="p-3 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded-xl transition border border-slate-600" title="Suara">
+                <i id="sound-icon" class="fas fa-volume-up"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="w-full max-w-5xl flex flex-col gap-6">
+
+        <!-- Navigation Tabs -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+            <button onclick="switchTab('misi1')" id="tab-misi1" class="tab-btn active px-4 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition bg-gradient-to-r from-sky-600 to-blue-700 text-white shadow-lg border border-sky-400/30">
+                <i class="fas fa-rocket"></i> 1. Misi Atmosfer
+            </button>
+            <button onclick="switchTab('misi2')" id="tab-misi2" class="tab-btn px-4 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700">
+                <i class="fas fa-flask"></i> 2. Lab Iklim & Kuliner
+            </button>
+            <button onclick="switchTab('misi3')" id="tab-misi3" class="tab-btn px-4 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700">
+                <i class="fas fa-brain"></i> 3. Kuis & Tantangan
+            </button>
+            <button onclick="switchTab('misi4')" id="tab-misi4" class="tab-btn px-4 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700">
+                <i class="fas fa-book-open"></i> Ensiklopedi Banda
+            </button>
+        </div>
+
+        <!-- MISI 1: CANVAS GAME LAPISAN ATMOSFER -->
+        <section id="misi1" class="tab-content block">
+            <div class="glass-panel rounded-2xl p-4 md:p-6 shadow-2xl relative">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                    <div>
+                        <h2 class="text-xl font-bold text-sky-400 flex items-center gap-2">
+                            <i class="fas fa-layer-group"></i> Misi 1: Navigasi Lapisan Atmosfer Banda
+                        </h2>
+                        <p class="text-xs md:text-sm text-slate-300">
+                            Kendalikan burung Koor Banda (Pigeon) menembus 5 Lapisan Atmosfer. Kumpulkan **Unsur Iklim & Biji Pala**, hindari **Awan Petir & Meteor**!
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="startAtmosphereGame()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl transition shadow-lg flex items-center gap-2">
+                            <i class="fas fa-play"></i> Mulai Terbang
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Info Bar Lapisan -->
+                <div id="layer-indicator" class="w-full bg-slate-900/90 text-center py-2 px-4 rounded-xl mb-3 text-xs md:text-sm font-semibold border border-sky-500/30 text-sky-300">
+                    Posisi Ketinggian: <span id="current-altitude" class="text-amber-400 font-bold">0 km</span> | Lapisan: <span id="current-layer" class="text-emerald-400 font-bold">Troposfer</span>
+                </div>
+
+                <!-- Canvas Game Container -->
+                <div class="relative w-full aspect-[16/9] max-h-[480px] bg-slate-950 rounded-xl overflow-hidden border border-slate-700 shadow-inner">
+                    <canvas id="atmCanvas" class="w-full h-full block"></canvas>
+                    
+                    <!-- Overlay Start/Pause/Game Over -->
+                    <div id="game-overlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20">
+                        <div class="w-20 h-20 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-4xl mb-3 animate-pulse">
+                            🕊️
+                        </div>
+                        <h3 class="text-2xl font-black text-white mb-2">Jelajah Lapisan Atmosfer</h3>
+                        <p class="text-sm text-slate-300 max-w-md mb-6">
+                            Pelajari Troposfer, Stratosfer, Mesosfer, Termosfer, dan Eksosfer. Gunakan tombol panah keyboard atau kontrol sentuh layar!
+                        </p>
+                        <button onclick="startAtmosphereGame()" class="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-base rounded-xl transition shadow-xl glow-orange">
+                            <i class="fas fa-paper-plane mr-2"></i> Terbang Sekarang!
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile / On-Screen Controls -->
+                <div class="mt-4 grid grid-cols-3 gap-2 max-w-xs mx-auto md:hidden">
+                    <div></div>
+                    <button id="btn-up" class="p-4 bg-slate-800 hover:bg-slate-700 active:bg-sky-600 text-white rounded-xl text-center font-bold shadow"><i class="fas fa-chevron-up"></i></button>
+                    <div></div>
+                    <button id="btn-left" class="p-4 bg-slate-800 hover:bg-slate-700 active:bg-sky-600 text-white rounded-xl text-center font-bold shadow"><i class="fas fa-chevron-left"></i></button>
+                    <button id="btn-down" class="p-4 bg-slate-800 hover:bg-slate-700 active:bg-sky-600 text-white rounded-xl text-center font-bold shadow"><i class="fas fa-chevron-down"></i></button>
+                    <button id="btn-right" class="p-4 bg-slate-800 hover:bg-slate-700 active:bg-sky-600 text-white rounded-xl text-center font-bold shadow"><i class="fas fa-chevron-right"></i></button>
+                </div>
+
+                <!-- Knowledge Cards under Misi 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-6">
+                    <div class="p-3 bg-slate-900/50 backdrop-blur-md rounded-xl border border-sky-500/30">
+                        <div class="text-xs font-bold text-sky-400">1. Troposfer (0-12 km)</div>
+                        <p class="text-[11px] text-slate-300 mt-1">Tempat cuaca, awan, hujan, dan angin muson yang memengaruhi penjemuran **Manisan Pala Banda**.</p>
+                    </div>
+                    <div class="p-3 bg-slate-900/50 backdrop-blur-md rounded-xl border border-indigo-500/30">
+                        <div class="text-xs font-bold text-indigo-400">2. Stratosfer (12-50 km)</div>
+                        <p class="text-[11px] text-slate-300 mt-1">Mengandung lapisan Ozon ($O_3$) penyerap radiasi UV berbahaya. Penerbangan pesawat jelajah.</p>
+                    </div>
+                    <div class="p-3 bg-slate-900/50 backdrop-blur-md rounded-xl border border-purple-500/30">
+                        <div class="text-xs font-bold text-purple-400">3. Mesosfer (50-85 km)</div>
+                        <p class="text-[11px] text-slate-300 mt-1">Lapisan terdingin (-100°C). Melindungi Banda & Bumi dari hantaman meteoroid.</p>
+                    </div>
+                    <div class="p-3 bg-slate-900/50 backdrop-blur-md rounded-xl border border-pink-500/30">
+                        <div class="text-xs font-bold text-pink-400">4. Termosfer (85-600 km)</div>
+                        <p class="text-[11px] text-slate-300 mt-1">Sangat panas (sampai 1.500°C). Terjadi ionisasi (gelombang radio) & aurora indah.</p>
+                    </div>
+                    <div class="p-3 bg-slate-900/50 backdrop-blur-md rounded-xl border border-amber-500/30">
+                        <div class="text-xs font-bold text-amber-400">5. Eksosfer (>600 km)</div>
+                        <p class="text-[11px] text-slate-300 mt-1">Batas luar angkasa tempat ditempatkannya satelit cuaca & komunikasi modern.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MISI 2: SIMULATOR IKLIM & DAPUR KULINER BANDA -->
+        <section id="misi2" class="tab-content hidden">
+            <div class="glass-panel rounded-2xl p-4 md:p-6 shadow-2xl">
+                <div class="mb-4">
+                    <h2 class="text-xl font-bold text-amber-400 flex items-center gap-2">
+                        <i class="fas fa-utensils"></i> Misi 2: Lab Iklim & Dapur Kuliner Banda
+                    </h2>
+                    <p class="text-xs md:text-sm text-slate-300">
+                        Atur parameter unsur-unsur iklim (Suhu, Kelembapan, Curah Hujan, & Angin Muson) untuk menghasilkan **Kuliner Khas Banda** sempurna!
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Left: Controls -->
+                    <div class="lg:col-span-5 bg-slate-900/50 backdrop-blur-md p-5 rounded-xl border border-slate-700 flex flex-col gap-4">
+                        <h3 class="font-bold text-sm text-slate-200 uppercase tracking-wide border-b border-slate-700 pb-2">
+                            <i class="fas fa-sliders-h text-amber-400 mr-2"></i> Pengaturan Unsur Cuaca & Iklim
+                        </h3>
+
+                        <!-- Temperature Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-300">1. Suhu Udara (Troposfer)</span>
+                                <span id="val-temp" class="text-amber-400 font-bold">27°C</span>
+                            </div>
+                            <input type="range" id="sim-temp" min="15" max="38" value="27" class="w-full accent-amber-500 cursor-pointer" oninput="updateClimateSim()">
+                            <span class="text-[10px] text-slate-400">Penting untuk pertumbuhan pohon Pala & proses pengeringan.</span>
+                        </div>
+
+                        <!-- Humidity Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-300">2. Kelembapan Udara</span>
+                                <span id="val-humidity" class="text-sky-400 font-bold">80%</span>
+                            </div>
+                            <input type="range" id="sim-humidity" min="30" max="98" value="80" class="w-full accent-sky-500 cursor-pointer" oninput="updateClimateSim()">
+                            <span class="text-[10px] text-slate-400">Iklim Af (Hutan Hujan Tropis) Banda berkelembapan tinggi.</span>
+                        </div>
+
+                        <!-- Rainfall Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-300">3. Curah Hujan Tahunan</span>
+                                <span id="val-rain" class="text-blue-400 font-bold">2.600 mm</span>
+                            </div>
+                            <input type="range" id="sim-rain" min="500" max="4500" value="2600" step="100" class="w-full accent-blue-500 cursor-pointer" oninput="updateClimateSim()">
+                            <span class="text-[10px] text-slate-400">Klasifikasi Köppen (Af): Curah hujan bulan terkering > 60 mm.</span>
+                        </div>
+
+                        <!-- Monsoon Wind Select -->
+                        <div>
+                            <label class="text-xs font-semibold text-slate-300 block mb-1">4. Musim Angin Muson</label>
+                            <select id="sim-wind" class="w-full bg-slate-800 text-slate-200 text-xs p-2.5 rounded-lg border border-slate-700 font-medium focus:border-amber-400 outline-none" onchange="updateClimateSim()">
+                                <option value="barat">Angin Muson Barat (Oktober - April) - Musim Hujan & Gelombang Besar</option>
+                                <option value="timur">Angin Muson Timur (Mei - September) - Musim Kemarau/Cerah & Panen Pala</option>
+                            </select>
+                            <span class="text-[10px] text-slate-400">Memengaruhi navigasi perahu nelayan Ikan Cakalang Banda.</span>
+                        </div>
+
+                        <!-- Altitude Zone (Junghuhn) -->
+                        <div>
+                            <label class="text-xs font-semibold text-slate-300 block mb-1">5. Zona Ketinggian (Junghuhn)</label>
+                            <select id="sim-altitude" class="w-full bg-slate-800 text-slate-200 text-xs p-2.5 rounded-lg border border-slate-700 font-medium focus:border-amber-400 outline-none" onchange="updateClimateSim()">
+                                <option value="panas">Zona Panas (0 - 700 m) - Cocok untuk Pala, Kelapa, Sagu</option>
+                                <option value="sedang">Zona Sedang (700 - 1.500 m) - Kopi, Teh, Sayuran</option>
+                                <option value="sejuk">Zona Sejuk (1.500 - 2.500 m) - Hutan Tumbuhan Tinggi</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Right: Culinary Target Recipes Match -->
+                    <div class="lg:col-span-7 flex flex-col gap-4">
+                        <div class="bg-slate-900/50 backdrop-blur-md p-4 rounded-xl border border-amber-500/30">
+                            <h3 class="font-bold text-sm text-amber-300 uppercase tracking-wide mb-2 flex items-center justify-between">
+                                <span><i class="fas fa-cookie-bite mr-2"></i> Hasil Kuliner & Panen Terkini</span>
+                                <span id="köppen-tag" class="text-xs bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-full border border-amber-400/30">Tipe Iklim: Köppen Af</span>
+                            </h3>
+                            <p id="sim-status-text" class="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-3 rounded-lg border border-slate-800">
+                                Mengatur kondisi atmosfer Banda...
+                            </p>
+                        </div>
+
+                        <!-- Culinary Recipe Cards Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- Card 1: Manisan Pala -->
+                            <div id="recipe-manisan" class="glass-panel p-4 rounded-xl border transition duration-300 border-slate-700">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-xl">
+                                            🍬
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-sm text-white">Manisan Pala Banda</h4>
+                                            <span class="text-[10px] text-amber-400 font-semibold">Syarat: Cuaca Cerah / Angin Timur / Suhu 26-30°C</span>
+                                        </div>
+                                    </div>
+                                    <span id="badge-manisan" class="text-xs font-bold px-2 py-1 rounded bg-slate-800 text-slate-400">Terkunci</span>
+                                </div>
+                                <p class="text-xs text-slate-300 mt-2">
+                                    Buah pala direndam air garam lalu dijemur di bawah radiasi matahari Troposfer tanpa cuaca hujan.
+                                </p>
+                            </div>
+
+                            <!-- Card 2: Ikan Kuah Kuning Banda -->
+                            <div id="recipe-kuahkunik" class="glass-panel p-4 rounded-xl border transition duration-300 border-slate-700">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-lg bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-xl">
+                                            🍲
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-sm text-white">Ikan Kuah Kuning Pala</h4>
+                                            <span class="text-[10px] text-sky-400 font-semibold">Syarat: Gelombang Aman / Angin Stabil / Zona Panas</span>
+                                        </div>
+                                    </div>
+                                    <span id="badge-kuahkunik" class="text-xs font-bold px-2 py-1 rounded bg-slate-800 text-slate-400">Terkunci</span>
+                                </div>
+                                <p class="text-xs text-slate-300 mt-2">
+                                    Olahan segar ikan tongkol/cakalang berkuah kunyit & kenari. Nelayan Banda berlayar saat dinamika cuaca laut kondusif.
+                                </p>
+                            </div>
+
+                            <!-- Card 3: Sirup & Halua Pala -->
+                            <div id="recipe-sirup" class="glass-panel p-4 rounded-xl border transition duration-300 border-slate-700">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-lg bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-xl">
+                                            🍹
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-sm text-white">Sirup & Halua Pala</h4>
+                                            <span class="text-[10px] text-emerald-400 font-semibold">Syarat: Curah Hujan > 2000mm / Kelembapan > 75%</span>
+                                        </div>
+                                    </div>
+                                    <span id="badge-sirup" class="text-xs font-bold px-2 py-1 rounded bg-slate-800 text-slate-400">Terkunci</span>
+                                </div>
+                                <p class="text-xs text-slate-300 mt-2">
+                                    Pohon *Myristica fragrans* tumbuh lebat pada Iklim Af (Hutan Hujan Tropis) dengan pasokan air berlimpah sepanjang tahun.
+                                </p>
+                            </div>
+
+                            <!-- Card 4: Roti Uppuk & Sambal Sanbal -->
+                            <div id="recipe-roti" class="glass-panel p-4 rounded-xl border transition duration-300 border-slate-700">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-lg bg-red-500/20 border border-red-400/40 flex items-center justify-center text-xl">
+                                            🍞
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-sm text-white">Roti Uppuk & Sambal Pala</h4>
+                                            <span class="text-[10px] text-red-400 font-semibold">Syarat: Zona Panas Junghuhn (0-700 mdpl)</span>
+                                        </div>
+                                    </div>
+                                    <span id="badge-roti" class="text-xs font-bold px-2 py-1 rounded bg-slate-800 text-slate-400">Terkunci</span>
+                                </div>
+                                <p class="text-xs text-slate-300 mt-2">
+                                    Kudapan khas Banda berbahan dasar singkong/sagu yang dipanggang. Tumbuh optimal di tanah dataran rendah Tropis Banda.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Cook Button -->
+                        <button onclick="cookBandaDelicacy()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                            <i class="fas fa-fire"></i> Racik & Panen Kuliner Berdasarkan Iklim!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MISI 3: KUIS INTERAKTIF GEOGRAFI ATMOSFER -->
+        <section id="misi3" class="tab-content hidden">
+            <div class="glass-panel rounded-2xl p-4 md:p-6 shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-sky-400 flex items-center gap-2">
+                            <i class="fas fa-graduation-cap"></i> Misi 3: Tantangan Geografi Atmosfer Kelas 10
+                        </h2>
+                        <p class="text-xs md:text-sm text-slate-300">
+                            Uji pemahamanmu tentang Unsur Cuaca, Iklim, Lapisan Atmosfer, dan Hubungannya dengan Banda!
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-slate-400 block">Pertanyaan</span>
+                        <span id="quiz-progress" class="text-lg font-bold text-amber-400">1 / 5</span>
+                    </div>
+                </div>
+
+                <!-- Quiz Card -->
+                <div id="quiz-container" class="bg-slate-900/50 backdrop-blur-md p-6 rounded-2xl border border-slate-700">
+                    <!-- Dynamic Quiz Content Inject Here -->
+                </div>
+
+                <!-- Quiz Results (Hidden initially) -->
+                <div id="quiz-result" class="hidden text-center p-8 bg-slate-900/50 backdrop-blur-md rounded-2xl border border-amber-500/40">
+                    <div class="w-24 h-24 rounded-full bg-amber-500/20 text-amber-400 text-5xl flex items-center justify-center mx-auto mb-4 border-2 border-amber-400">
+                        🏆
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-2">Tantangan Atmosfer Selesai!</h3>
+                    <p id="result-text" class="text-slate-300 text-sm mb-6 max-w-md mx-auto">
+                        Kamu berhasil menyelesaikan kuis Geografi Atmosfer & Kuliner Banda.
+                    </p>
+                    <button onclick="restartQuiz()" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl shadow-lg transition">
+                        <i class="fas fa-redo mr-2"></i> Coba Lagi
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MISI 4: ENSIKLOPEDI ATMOSFER BANDA -->
+        <section id="misi4" class="tab-content hidden">
+            <div class="glass-panel rounded-2xl p-4 md:p-6 shadow-2xl">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-amber-400 flex items-center gap-2">
+                        <i class="fas fa-book-atlas"></i> Ensiklopedi Geografi: Iklim & Kuliner Banda Neira
+                    </h2>
+                    <p class="text-xs md:text-sm text-slate-300">
+                        Rangkuman Konsep Materi Geografi Kelas 10 & Kekayaan Warisan Rempah Banda Maluku.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Topic 1: Lapisan Atmosfer -->
+                    <div class="bg-slate-900/50 backdrop-blur-md p-5 rounded-xl border border-slate-700">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">1</span>
+                            <h3 class="font-bold text-base text-white">Lapisan Atmosfer & Fenomena Cuaca</h3>
+                        </div>
+                        <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside leading-relaxed">
+                            <li><strong class="text-sky-300">Troposfer (0-12 km):</strong> Tempat terjadinya fenomena cuaca (awan, hujan, angin). Suhu mengalami penurunan 0,6°C setiap naik 100 meter (Lapse Rate).</li>
+                            <li><strong class="text-indigo-300">Stratosfer (12-50 km):</strong> Terdapat lapisan ozon ($O_3$) penyerap sinar ultraviolet matahari. Bebas dari awan cuaca.</li>
+                            <li><strong class="text-purple-300">Mesosfer (50-85 km):</strong> Melindungi bumi dari jatuhan meteorit melalui proses pemanasan gesekan udara.</li>
+                            <li><strong class="text-pink-300">Termosfer & Eksosfer:</strong> Lapisan ionisasi sinyal komunikasi gelombang radio dan tempat satelit buatan mengorbit.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Topic 2: Klasifikasi Iklim Köppen & Junghuhn -->
+                    <div class="bg-slate-900/50 backdrop-blur-md p-5 rounded-xl border border-slate-700">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">2</span>
+                            <h3 class="font-bold text-base text-white">Klasifikasi Iklim Köppen & Junghuhn di Banda</h3>
+                        </div>
+                        <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside leading-relaxed">
+                            <li><strong class="text-amber-300">Iklim Köppen Tipe Af (Hutan Hujan Tropis):</strong> Kepulauan Banda memiliki temperatur hangat sepanjang tahun (>18°C) dan curah hujan tinggi (>2.000 mm/tahun). Kondisi ini sangat ideal bagi pohon Pala (*Myristica fragrans*).</li>
+                            <li><strong class="text-amber-300">Klasifikasi Junghuhn:</strong> Banda berada di **Zona Panas** (0 - 700 mdpl) dengan suhu rata-rata 22°C - 28°C. Tanaman dominan: Pala, Kelapa, Cengkeh, Sagu.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Topic 3: Angin Muson & Nelayan Banda -->
+                    <div class="bg-slate-900/50 backdrop-blur-md p-5 rounded-xl border border-slate-700">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">3</span>
+                            <h3 class="font-bold text-base text-white">Angin Muson & Sirkulasi Udara Laut</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-2">
+                            Angin Muson dipicu oleh perbedaan tekanan udara antara Benua Asia dan Australia akibat pergerakan semu matahari.
+                        </p>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                            <li><strong>Angin Muson Barat (Okt - Apr):</strong> Angin bertiup dari Asia ke Australia membawa kelembapan tinggi $\rightarrow$ Musim Hujan di Maluku & Indonesia.</li>
+                            <li><strong>Angin Muson Timur (Mei - Sep):</strong> Bertiup dari Australia yang kering ke Asia $\rightarrow$ Musim Panen Pala & penjemuran Manisan Pala di Banda.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Topic 4: Kuliner Khas Banda & Pengaruh Iklim -->
+                    <div class="bg-slate-900/50 backdrop-blur-md p-5 rounded-xl border border-slate-700">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center font-bold">4</span>
+                            <h3 class="font-bold text-base text-white">Keajaiban Kuliner Pala Banda</h3>
+                        </div>
+                        <div class="text-xs text-slate-300 space-y-2 leading-relaxed">
+                            <p><strong>Manisan Pala Banda:</strong> Memanfaatkan energi panas matahari (radiasi solar Troposfer) untuk pengeringan setelah penggaraman.</p>
+                            <p><strong>Ikan Kuah Kuning & Sambal Sanbal:</strong> Ikan cakalang segar ditangkap nelayan saat angin dan kelembapan stabil di Laut Banda, disajikan dengan aroma rempah biji pala halus.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Audio Synthesizer Engine (Web Audio API)
+        let audioCtx = null;
+        let soundEnabled = true;
+        let musicStarted = false;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            // Putar backsound pada interaksi pertama jika suara diaktifkan
+            if (!musicStarted && soundEnabled) {
+                const bgMusic = document.getElementById('bg-music');
+                bgMusic.volume = 0.3; // Volume 30% agar tidak menutupi efek suara/konsentrasi
+                bgMusic.play().catch(e => console.log("Autoplay ditunda oleh browser, menunggu interaksi pengguna.", e));
+                musicStarted = true;
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'collect') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                } else if (type === 'hit') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.exponentialRampToValueAtTime(60, now + 0.2);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'win') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.1);
+                    osc.frequency.setValueAtTime(659.25, now + 0.2);
+                    osc.frequency.setValueAtTime(880, now + 0.3);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                }
+            } catch(e) {
+                console.log("Audio error", e);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('sound-icon');
+            const bgMusic = document.getElementById('bg-music');
+            
+            if (soundEnabled) {
+                btn.className = 'fas fa-volume-up';
+                bgMusic.play().catch(e => console.log(e));
+                musicStarted = true;
+            } else {
+                btn.className = 'fas fa-volume-mute';
+                bgMusic.pause();
+            }
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-gradient-to-r', 'from-sky-600', 'to-blue-700', 'text-white', 'shadow-lg');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-' + tabId);
+            activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+            activeBtn.classList.add('bg-gradient-to-r', 'from-sky-600', 'to-blue-700', 'text-white', 'shadow-lg');
+
+            if (tabId === 'misi1' && !gameRunning) {
+                initCanvas();
+            }
+        }
+
+        // Global State
+        let score = 0;
+        let unlockedRecipes = { manisan: false, kuahkunik: false, sirup: false, roti: false };
+
+        function addScore(pts) {
+            score += pts;
+            document.getElementById('player-score').innerText = score;
+            updateBadgeCount();
+        }
+
+        function updateBadgeCount() {
+            let count = Object.values(unlockedRecipes).filter(Boolean).length;
+            document.getElementById('player-badges').innerText = count + ' / 4';
+        }
+
+        // MISI 1: CANVAS GAME CODE
+        let canvas, ctx;
+        let gameRunning = false;
+        let animFrameId = null;
+
+        // Player Bird Object
+        let player = {
+            x: 80,
+            y: 200,
+            width: 32,
+            height: 32,
+            vy: 0,
+            speed: 4,
+            altitudeKm: 0 // 0 to 700 km
+        };
+
+        // Controls
+        let keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
+
+        let collectibles = [];
+        let hazards = [];
+        let layerParticles = [];
+
+        function initCanvas() {
+            canvas = document.getElementById('atmCanvas');
+            if (!canvas) return;
+            ctx = canvas.getContext('2d');
+
+            // Set dynamic canvas resolution
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height || 360;
+
+            player.y = canvas.height / 2;
+
+            drawStaticCanvas();
+        }
+
+        function drawStaticCanvas() {
+            if (!ctx) return;
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function startAtmosphereGame() {
+            initAudio();
+            initCanvas();
+            document.getElementById('game-overlay').classList.add('hidden');
+            gameRunning = true;
+            score = Math.max(score, 0);
+
+            player.x = 60;
+            player.y = canvas.height - 60;
+            player.altitudeKm = 2;
+
+            collectibles = [];
+            hazards = [];
+
+            // Spawn initial items
+            spawnGameObjects();
+
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            gameLoop();
+        }
+
+        function spawnGameObjects() {
+            // Collectibles: Nutmegs, Weather Icons
+            for (let i = 0; i < 6; i++) {
+                collectibles.push({
+                    x: canvas.width + Math.random() * 600,
+                    y: 40 + Math.random() * (canvas.height - 80),
+                    size: 18,
+                    type: Math.random() > 0.4 ? 'nutmeg' : 'weather_token',
+                    collected: false
+                });
+            }
+
+            // Hazards: Clouds / Lightning / Meteors
+            for (let i = 0; i < 4; i++) {
+                hazards.push({
+                    x: canvas.width + 200 + Math.random() * 700,
+                    y: 40 + Math.random() * (canvas.height - 80),
+                    size: 24,
+                    speed: 2 + Math.random() * 2,
+                    type: Math.random() > 0.5 ? 'storm' : 'meteor'
+                });
+            }
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            // Update Player Position based on Input
+            if (keys.ArrowUp) player.y -= player.speed;
+            if (keys.ArrowDown) player.y += player.speed;
+            if (keys.ArrowLeft) player.x -= player.speed;
+            if (keys.ArrowRight) player.x += player.speed;
+
+            // Boundaries
+            player.x = Math.max(20, Math.min(canvas.width - 40, player.x));
+            player.y = Math.max(20, Math.min(canvas.height - 40, player.y));
+
+            // Map Y position to Altitude (bottom = 0km, top = 700km)
+            let altRatio = 1 - (player.y / canvas.height);
+            player.altitudeKm = Math.round(altRatio * 700);
+
+            // Determine Layer
+            let layerName = "Troposfer";
+            let bgColor1 = '#0284c7', bgColor2 = '#0f172a'; // Troposfer default
+
+            if (player.altitudeKm <= 12) {
+                layerName = "Troposfer (0-12 km)";
+                bgColor1 = '#38bdf8'; bgColor2 = '#0284c7';
+            } else if (player.altitudeKm <= 50) {
+                layerName = "Stratosfer (12-50 km)";
+                bgColor1 = '#1e3a8a'; bgColor2 = '#1e1b4b';
+            } else if (player.altitudeKm <= 85) {
+                layerName = "Mesosfer (50-85 km)";
+                bgColor1 = '#311042'; bgColor2 = '#0f172a';
+            } else if (player.altitudeKm <= 600) {
+                layerName = "Termosfer (85-600 km)";
+                bgColor1 = '#581c87'; bgColor2 = '#3b0764';
+            } else {
+                layerName = "Eksosfer (>600 km)";
+                bgColor1 = '#09090b'; bgColor2 = '#18181b';
+            }
+
+            document.getElementById('current-altitude').innerText = player.altitudeKm + ' km';
+            document.getElementById('current-layer').innerText = layerName;
+
+            // Clear Canvas with Layer Gradient
+            let grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, bgColor1);
+            grad.addColorStop(1, bgColor2);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Background Atmosphere Guide Lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height * (1 - 12/700)); ctx.lineTo(canvas.width, canvas.height * (1 - 12/700)); // Troposfer top
+            ctx.moveTo(0, canvas.height * (1 - 50/700)); ctx.lineTo(canvas.width, canvas.height * (1 - 50/700)); // Stratosfer top
+            ctx.moveTo(0, canvas.height * (1 - 85/700)); ctx.lineTo(canvas.width, canvas.height * (1 - 85/700)); // Mesosfer top
+            ctx.stroke();
+
+            // Layer Labels on Canvas
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.font = '10px Plus Jakarta Sans';
+            ctx.fillText('Eksosfer', 10, 20);
+            ctx.fillText('Mesosfer (50km)', 10, canvas.height * (1 - 50/700) - 5);
+            ctx.fillText('Troposfer (Awan & Cuaca)', 10, canvas.height - 10);
+
+            // Draw Player (Koor Bird with Nutmeg)
+            ctx.save();
+            ctx.translate(player.x, player.y);
+            // Draw Pigeon Emoji or SVG shape
+            ctx.font = '26px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🕊️', 0, 0);
+            ctx.restore();
+
+            // Update & Render Collectibles
+            collectibles.forEach(item => {
+                item.x -= 2;
+                if (item.x < -20) {
+                    item.x = canvas.width + Math.random() * 300;
+                    item.y = 40 + Math.random() * (canvas.height - 80);
+                }
+
+                // Collision Check
+                let dx = player.x - item.x;
+                let dy = player.y - item.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+
+                if (dist < player.width/2 + item.size) {
+                    // Collected!
+                    playSound('collect');
+                    addScore(15);
+                    item.x = canvas.width + Math.random() * 400;
+                    item.y = 40 + Math.random() * (canvas.height - 80);
+                }
+
+                // Draw Item
+                ctx.font = '20px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(item.type === 'nutmeg' ? '🌰' : '🌤️', item.x, item.y);
+            });
+
+            // Update & Render Hazards
+            hazards.forEach(h => {
+                h.x -= h.speed;
+                if (h.x < -30) {
+                    h.x = canvas.width + Math.random() * 500;
+                    h.y = 40 + Math.random() * (canvas.height - 80);
+                }
+
+                // Collision Check
+                let dx = player.x - h.x;
+                let dy = player.y - h.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+
+                if (dist < player.width/2 + h.size/2) {
+                    playSound('hit');
+                    addScore(-5);
+                    h.x = canvas.width + 300;
+                }
+
+                ctx.font = '22px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(h.type === 'storm' ? '🌩️' : '☄️', h.x, h.y);
+            });
+
+            animFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        // Keyboard & Touch Listeners
+        window.addEventListener('keydown', e => {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                keys[e.key] = true;
+            }
+        });
+
+        window.addEventListener('keyup', e => {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                keys[e.key] = false;
+            }
+        });
+
+        // Mobile Touch Button Setup
+        function bindTouchBtn(btnId, keyName) {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); keys[keyName] = true; });
+            btn.addEventListener('touchend', (e) => { e.preventDefault(); keys[keyName] = false; });
+            btn.addEventListener('mousedown', () => { keys[keyName] = true; });
+            btn.addEventListener('mouseup', () => { keys[keyName] = false; });
+        }
+
+        bindTouchBtn('btn-up', 'ArrowUp');
+        bindTouchBtn('btn-down', 'ArrowDown');
+        bindTouchBtn('btn-left', 'ArrowLeft');
+        bindTouchBtn('btn-right', 'ArrowRight');
+
+
+        // MISI 2: SIMULATOR IKLIM LOGIC
+        function updateClimateSim() {
+            const temp = parseInt(document.getElementById('sim-temp').value);
+            const humidity = parseInt(document.getElementById('sim-humidity').value);
+            const rain = parseInt(document.getElementById('sim-rain').value);
+            const wind = document.getElementById('sim-wind').value;
+            const altitude = document.getElementById('sim-altitude').value;
+
+            document.getElementById('val-temp').innerText = temp + '°C';
+            document.getElementById('val-humidity').innerText = humidity + '%';
+            document.getElementById('val-rain').innerText = rain.toLocaleString('id-ID') + ' mm';
+
+            let statusBox = document.getElementById('sim-status-text');
+            let köppenTag = document.getElementById('köppen-tag');
+
+            // Köppen Evaluation
+            if (rain >= 2000 && humidity >= 70) {
+                köppenTag.innerText = "Tipe Köppen: Af (Hutan Hujan Tropis)";
+                köppenTag.className = "text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-400/30";
+            } else if (rain < 1500) {
+                köppenTag.innerText = "Tipe Köppen: Aw (Sabana Tropis)";
+                köppenTag.className = "text-xs bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-full border border-amber-400/30";
+            } else {
+                köppenTag.innerText = "Tipe Köppen: Am (Muson Tropis)";
+                köppenTag.className = "text-xs bg-sky-500/20 text-sky-300 px-2.5 py-1 rounded-full border border-sky-400/30";
+            }
+
+            // Context status text
+            let windDesc = wind === 'barat' ? 'Angin Muson Barat membawa uap air melimpah (Musim Hujan).' : 'Angin Muson Timur bertiup lebih cerah & kering (Sangat baik untuk penjemuran Pala).';
+            statusBox.innerHTML = `<strong>Kondisi Atmosfer Banda saat ini:</strong> Suhu ${temp}°C pada ${altitude === 'panas' ? 'Zona Panas (0-700 mdpl)' : 'Zona Ketinggian ' + altitude}. ${windDesc}`;
+        }
+
+        function cookBandaDelicacy() {
+            initAudio();
+            const temp = parseInt(document.getElementById('sim-temp').value);
+            const humidity = parseInt(document.getElementById('sim-humidity').value);
+            const rain = parseInt(document.getElementById('sim-rain').value);
+            const wind = document.getElementById('sim-wind').value;
+            const altitude = document.getElementById('sim-altitude').value;
+
+            let matches = [];
+
+            // Check Recipe 1: Manisan Pala
+            if (wind === 'timur' && temp >= 25 && temp <= 32 && humidity < 85) {
+                unlockedRecipes.manisan = true;
+                matches.push('Manisan Pala Banda');
+                activateCard('recipe-manisan', 'badge-manisan');
+            }
+
+            // Check Recipe 2: Ikan Kuah Kuning
+            if (altitude === 'panas' && wind === 'timur') {
+                unlockedRecipes.kuahkunik = true;
+                matches.push('Ikan Kuah Kuning Pala');
+                activateCard('recipe-kuahkunik', 'badge-kuahkunik');
+            }
+
+            // Check Recipe 3: Sirup & Halua Pala
+            if (rain >= 2000 && humidity >= 75) {
+                unlockedRecipes.sirup = true;
+                matches.push('Sirup & Halua Pala');
+                activateCard('recipe-sirup', 'badge-sirup');
+            }
+
+            // Check Recipe 4: Roti Uppuk
+            if (altitude === 'panas' && temp >= 24) {
+                unlockedRecipes.roti = true;
+                matches.push('Roti Uppuk & Sambal Sanbal');
+                activateCard('recipe-roti', 'badge-roti');
+            }
+
+            if (matches.length > 0) {
+                playSound('win');
+                addScore(matches.length * 25);
+                alertBox('🎉 Berhasil Memanen Kuliner Banda!', `Kombinasi iklimmu berhasil menghasilkan: ${matches.join(', ')}.`);
+            } else {
+                playSound('hit');
+                alertBox('⚠️ Iklim Belum Pas!', 'Kondisi suhu/kelembapan/angin belum mendukung panen kuliner khas Banda. Coba atur kembali slider!');
+            }
+        }
+
+        function activateCard(cardId, badgeId) {
+            const card = document.getElementById(cardId);
+            const badge = document.getElementById(badgeId);
+
+            card.classList.remove('border-slate-700');
+            card.classList.add('border-amber-400', 'bg-amber-950/30', 'glow-orange');
+
+            badge.innerText = 'Tergolong!';
+            badge.className = 'text-xs font-bold px-2.5 py-1 rounded bg-amber-500 text-slate-950';
+        }
+
+
+        // MISI 3: KUIS GEOGRAFI ATMOSFER
+        const quizQuestions = [
+            {
+                question: "Fenomena cuaca seperti pembentukan awan, hujan, dan angin yang memengaruhi proses pembuatan Manisan Pala Banda terjadi pada lapisan atmosfer...",
+                options: ["Stratosfer", "Troposfer", "Mesosfer", "Termosfer"],
+                correct: 1,
+                explanation: "Troposfer (0-12 km) adalah satu-satunya lapisan atmosfer yang mengandung uap air tempat berlangsungnya seluruh peristiwa cuaca & iklim."
+            },
+            {
+                question: "Kepulauan Banda memiliki temperatur hangat sepanjang tahun (>18°C) dan curah hujan tahunan yang tinggi. Menurut klasifikasi iklim Köppen, Banda tergolong tipe iklim...",
+                options: ["Af (Hutan Hujan Tropis)", "BW (Gurun Kering)", "Cfb (Sedang Basah)", "ET (Tundra)"],
+                correct: 0,
+                explanation: "Tipe Af adalah iklim Hutan Hujan Tropis yang memiliki suhu hangat dan curah hujan melimpah tanpa musim kering yang nyata, sangat ideal untuk tanaman Pala."
+            },
+            {
+                question: "Nelayan Banda memanfaatkan pergerakan Angin Muson Timur (Mei - September) untuk melaut mencari Ikan Cakalang. Angin Muson terjadi akibat...",
+                options: [
+                    "Perbedaan tekanan udara antara Benua Asia dan Benua Australia",
+                    "Erupsi gunung api raksasa di Maluku",
+                    "Tarikan gravitasi bulan pada air laut",
+                    "Rotasi satelit di lapisan Eksosfer"
+                ],
+                correct: 0,
+                explanation: "Angin Muson dipicu oleh perbedaan pemanasan dan tekanan udara antara daratan benua Asia dan Australia akibat gerak semu tahunan matahari."
+            },
+            {
+                question: "Menurut klasifikasi ketinggian iklim Friedrich Junghuhn, Kepulauan Banda (0 - 700 meter di atas permukaan laut) berada pada Zona...",
+                options: ["Zona Panas", "Zona Sedang", "Zona Sejuk", "Zona Dingin"],
+                correct: 0,
+                explanation: "Zona Panas Junghuhn (0 - 700 mdpl) memiliki suhu 22°C - 26.3°C, sangat cocok untuk budidaya Pala, Kelapa, Cengkeh, dan Sagu."
+            },
+            {
+                question: "Mengapa proses tradisional pengeringan biji Pala untuk dijadikan Manisan Pala Banda sangat bergantung pada kelembapan udara & radiasi matahari di Troposfer?",
+                options: [
+                    "Suhu tinggi dan kelembapan rendah mempercepat penguapan air dari daging buah Pala",
+                    "Sinar UV Stratosfer menghancurkan warna alami Pala",
+                    "Awan hujan menambah kadar gula dalam biji Pala",
+                    "Tekanan udara Termosfer mengeringkan buah secara alami"
+                ],
+                correct: 0,
+                explanation: "Pengeringan tradisional memanfaatkan radiasi solar di Troposfer; suhu hangat dan kelembapan yang pas mempercepat evaporasi tanpa merusak kualitas Pala."
+            }
+        ];
+
+        let currentQuizIdx = 0;
+        let quizScore = 0;
+
+        function renderQuiz() {
+            const q = quizQuestions[currentQuizIdx];
+            const container = document.getElementById('quiz-container');
+
+            document.getElementById('quiz-progress').innerText = `${currentQuizIdx + 1} / ${quizQuestions.length}`;
+
+            let optionsHTML = q.options.map((opt, idx) => `
+                <button onclick="checkQuizAnswer(${idx})" class="w-full text-left p-4 rounded-xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 transition font-medium text-sm text-slate-200 flex items-center justify-between group">
+                    <span><strong class="text-amber-400 mr-2">${String.fromCharCode(65 + idx)}.</strong> ${opt}</span>
+                    <i class="fas fa-arrow-right opacity-0 group-hover:opacity-100 text-amber-400 transition"></i>
+                </button>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="mb-4">
+                    <span class="text-xs font-bold uppercase tracking-wider text-sky-400 bg-sky-950/60 px-3 py-1 rounded-full border border-sky-500/30">
+                        Soal Geografi SMA # ${currentQuizIdx + 1}
+                    </span>
+                    <h3 class="text-base md:text-lg font-bold text-white mt-3 leading-snug">
+                        ${q.question}
+                    </h3>
+                </div>
+                <div class="grid grid-cols-1 gap-3 mt-6">
+                    ${optionsHTML}
+                </div>
+            `;
+        }
+
+        function checkQuizAnswer(selectedIdx) {
+            initAudio();
+            const q = quizQuestions[currentQuizIdx];
+            const isCorrect = selectedIdx === q.correct;
+
+            if (isCorrect) {
+                playSound('collect');
+                addScore(20);
+                quizScore++;
+                alertBox('✅ Jawabannya Benar!', q.explanation);
+            } else {
+                playSound('hit');
+                alertBox('❌ Jawaban Belum Tepat', `Jawaban yang benar adalah: ${q.options[q.correct]}. <br><br><strong>Penjelasan:</strong> ${q.explanation}`);
+            }
+
+            currentQuizIdx++;
+            if (currentQuizIdx < quizQuestions.length) {
+                renderQuiz();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            const resBox = document.getElementById('quiz-result');
+            resBox.classList.remove('hidden');
+
+            document.getElementById('result-text').innerHTML = `
+                Kamu menjawab <strong class="text-amber-400 font-bold">${quizScore} dari ${quizQuestions.length}</strong> pertanyaan dengan tepat.<br>
+                Total poin yang dikumpulkan: <span class="text-emerald-400 font-black text-lg">${score}</span> poin Nutmeg!
+            `;
+        }
+
+        function restartQuiz() {
+            currentQuizIdx = 0;
+            quizScore = 0;
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            renderQuiz();
+        }
+
+        // Custom Modal Alert Box (Replacing alert())
+        function alertBox(title, message) {
+            const existingModal = document.getElementById('custom-alert-modal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'custom-alert-modal';
+            modal.className = 'fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in';
+            modal.innerHTML = `
+                <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-center">
+                    <h3 class="text-xl font-black text-amber-400 mb-2">${title}</h3>
+                    <div class="text-xs md:text-sm text-slate-300 leading-relaxed mb-6">${message}</div>
+                    <button onclick="document.getElementById('custom-alert-modal').remove()" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl shadow-lg transition">
+                        Paham & Lanjutkan
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Window Load Initializer
+        window.onload = function() {
+            initCanvas();
+            updateClimateSim();
+            renderQuiz();
+
+            // Resize handle for responsive Canvas
+            window.addEventListener('resize', () => {
+                if (canvas) {
+                    const rect = canvas.parentElement.getBoundingClientRect();
+                    canvas.width = rect.width;
+                    canvas.height = rect.height || 360;
+                    if (!gameRunning) drawStaticCanvas();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
+}
